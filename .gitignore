@@ -41,3 +41,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+src/main/java/crest/jira/data/rest/JiraRestClient.java
+*.class
+target/classes/META-INF/MANIFEST.MF
+target/classes/META-INF/maven/jira-data-retriever/jira-agile-java-client/pom.xml
