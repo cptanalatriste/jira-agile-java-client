@@ -3,6 +3,10 @@ package crest.jira.data.retriever.map;
 import crest.jira.data.retriever.model.CustomFieldsCatalog;
 import crest.jira.data.retriever.model.Field;
 import crest.jira.data.retriever.model.Sprint;
+import crest.jira.data.retriever.model.User;
+import crest.jira.data.retriever.model.Version;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,9 +18,19 @@ import java.util.Map;
 public class CustomFieldMapper {
 
   private Field[] fields;
+  private DateFormat dateFormat;
+  private ObjectMapper objectMapper;
 
+  /**
+   * Initializes attributes.
+   * 
+   * @param fields
+   *          Field catalog.
+   */
   public CustomFieldMapper(Field[] fields) {
     this.fields = fields;
+    this.objectMapper = new ObjectMapper();
+    this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   }
 
   /**
@@ -39,6 +53,21 @@ public class CustomFieldMapper {
     }
 
     catalog.setSprint(getSprints(issueFieldsMap));
+    Object dateFirstResponse = getFieldValue("Date of First Response", issueFieldsMap);
+
+    if (dateFirstResponse != null) {
+      catalog.setDateOfFirstResponse(dateFormat.parse((String) dateFirstResponse));
+    }
+
+    catalog.setGlobalRank((String) getFieldValue("Global Rank", issueFieldsMap));
+    catalog.setTimeInStatus((String) getFieldValue("Time in Status", issueFieldsMap));
+    catalog.setAttachmentCount(
+        Double.parseDouble((String) getFieldValue("Attachment count", issueFieldsMap)));
+    catalog.setTargetVersion(objectMapper
+        .convertValue(getFieldValue("Target Version/s", issueFieldsMap), Version[].class));
+    catalog.setRank((String) getFieldValue("Rank", issueFieldsMap));
+    catalog.setShepherd(
+        objectMapper.convertValue(getFieldValue("Shepherd", issueFieldsMap), User.class));
 
     return catalog;
   }
