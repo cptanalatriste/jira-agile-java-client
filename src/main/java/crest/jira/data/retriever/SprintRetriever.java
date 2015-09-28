@@ -17,12 +17,28 @@ import javax.ws.rs.core.GenericType;
 
 public class SprintRetriever extends BaseRetriever {
 
-  private static final String SPRINT_PATH = "/{boardId}/sprint";
+  private static final String SPRINT_PER_BOARD_PATH = "/{boardId}/sprint";
+  private static final String SPRINT_PATH = "/rest/agile/latest/sprint/{sprintId}";
+
   private Field[] fields;
 
   public SprintRetriever(Client client, JiraApiConfiguration configuration, Field[] fields) {
     super(client, configuration);
     this.fields = fields;
+  }
+
+  /**
+   * Retrieves Sprint information.
+   * 
+   * @param sprintId
+   *          Sprint identifier.
+   * @return Sprint instance.
+   */
+  public Sprint getSprint(String sprintId) {
+    String uri = getConfiguration().getHostAndContext() + SPRINT_PATH;
+    WebTarget target = getClient().target(uri).resolveTemplate("sprintId", sprintId);
+
+    return getBuilder(target).get(Sprint.class);
   }
 
   /**
@@ -34,7 +50,7 @@ public class SprintRetriever extends BaseRetriever {
    */
   public ResponseList<Sprint> getAllSprints(String boardId) {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
-        + SPRINT_PATH;
+        + SPRINT_PER_BOARD_PATH;
     WebTarget target = getClient().target(uri).resolveTemplate("boardId", boardId);
     Builder builder = getBuilder(target);
 
@@ -57,7 +73,7 @@ public class SprintRetriever extends BaseRetriever {
   public ResponseList<IssueWithCustomFields> getIssuesForSprint(String boardId, String sprintId)
       throws ParseException {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
-        + SPRINT_PATH + "/{sprintId}/issue";
+        + SPRINT_PER_BOARD_PATH + "/{sprintId}/issue";
     Map<String, Object> templateValues = new HashMap<String, Object>();
     templateValues.put("boardId", boardId);
     templateValues.put("sprintId", sprintId);
