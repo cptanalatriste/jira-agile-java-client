@@ -3,6 +3,8 @@ package crest.jira.data.retriever.model;
 import java.util.Date;
 
 public class Version extends JiraEntity {
+
+  private String projectId;
   private boolean archived;
   private boolean released;
   private Date releaseDate;
@@ -13,6 +15,14 @@ public class Version extends JiraEntity {
 
   public void setArchived(boolean archived) {
     this.archived = archived;
+  }
+
+  public String getProjectId() {
+    return projectId;
+  }
+
+  public void setProjectId(String projectId) {
+    this.projectId = projectId;
   }
 
   public boolean isReleased() {

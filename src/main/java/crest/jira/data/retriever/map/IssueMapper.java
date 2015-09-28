@@ -3,7 +3,6 @@ package crest.jira.data.retriever.map;
 import crest.jira.data.retriever.model.Comment;
 import crest.jira.data.retriever.model.Component;
 import crest.jira.data.retriever.model.Epic;
-import crest.jira.data.retriever.model.Field;
 import crest.jira.data.retriever.model.Issue;
 import crest.jira.data.retriever.model.IssueType;
 import crest.jira.data.retriever.model.Priority;
@@ -23,7 +22,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class IssueMapper {
@@ -34,13 +32,10 @@ public class IssueMapper {
   // hour off.
   private DateFormat dateFormat;
 
-  private Field[] fields;
-
   /**
    * Initializes attributes.
    */
-  public IssueMapper(Field[] fields) {
-    this.fields = fields;
+  public IssueMapper() {
     objectMapper = new ObjectMapper();
     dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   }
@@ -88,7 +83,10 @@ public class IssueMapper {
       issue.setWorkratio(workratio);
     }
 
-    issue.setLastViewed((String) issueFieldsMap.get("lastViewed"));
+    Object lastViewedString = issueFieldsMap.get("lastViewed");
+    if (lastViewedString != null) {
+      issue.setLastViewed(dateFormat.parse((String) lastViewedString));
+    }
     issue.setWatches(objectMapper.convertValue(issueFieldsMap.get("watches"), Watches.class));
 
     String createdDate = (String) issueFieldsMap.get("created");
@@ -114,7 +112,7 @@ public class IssueMapper {
         .get("issuelinks");
 
     if (issueLinksMap != null && issueLinksMap.size() > 0) {
-      IssueLinksMapper issueLinkMapper = new IssueLinksMapper(fields);
+      IssueLinksMapper issueLinkMapper = new IssueLinksMapper();
       issue.setIssuelinks(issueLinkMapper.map(issueLinksMap));
     }
 
@@ -166,81 +164,9 @@ public class IssueMapper {
 
     issue.setClosedSprints(
         objectMapper.convertValue(issueFieldsMap.get("closedSprints"), Sprint[].class));
-    issue.setStoryPoints(getStoryPoints(issueFieldsMap));
-    issue.setSprints(getSprints(issueFieldsMap));
+    issue.setSprint(objectMapper.convertValue(issueFieldsMap.get("sprint"), Sprint.class));
 
     return issue;
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  private Sprint[] getSprints(Map issueFieldsMap) throws ParseException {
-    Field field = this.getFieldByName("Sprint");
-    ArrayList<String> sprintAsList = (ArrayList<String>) issueFieldsMap.get(field.getId());
-    List<Sprint> sprints = new ArrayList<Sprint>();
-    DateFormat customDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-    if (sprintAsList != null && sprintAsList.size() > 0) {
-
-      for (String sprintAsString : sprintAsList) {
-        Sprint sprint = new Sprint();
-
-        int openBracket = sprintAsString.indexOf('[');
-        int closeBracket = sprintAsString.indexOf(']');
-        String[] tokens = sprintAsString.substring(openBracket + 1, closeBracket).split(",");
-
-        for (String token : tokens) {
-          int equalIndex = token.indexOf('=');
-          String value = token.substring(equalIndex + 1);
-          if (token.indexOf("id") == 0 && value.indexOf("null") < 0) {
-            sprint.setId(value);
-          }
-
-          if (token.indexOf("state") == 0 && value.indexOf("null") < 0) {
-            sprint.setState(value);
-          }
-
-          if (token.indexOf("name") == 0 && value.indexOf("null") < 0) {
-            sprint.setName(value);
-          }
-
-          if (token.indexOf("startDate") == 0 && value.indexOf("null") < 0) {
-            sprint.setStartDate(customDateFormat.parse(value));
-          }
-
-          if (token.indexOf("endDate") == 0 && value.indexOf("null") < 0) {
-            sprint.setEndDate(customDateFormat.parse(value));
-          }
-
-          if (token.indexOf("completeDate") == 0 && value.indexOf("null") < 0) {
-            sprint.setCompleteDate(customDateFormat.parse(value));
-          }
-        }
-
-        sprints.add(sprint);
-      }
-    }
-
-    return sprints.toArray(new Sprint[sprints.size()]);
-  }
-
-  @SuppressWarnings("rawtypes")
-  private double getStoryPoints(Map issueFieldsMap) {
-    Field field = this.getFieldByName("Story Points");
-    Double result = -1.0;
-
-    if ("number".equals(field.getSchema().getType()) && issueFieldsMap.get(field.getId()) != null) {
-      result = (Double) issueFieldsMap.get(field.getId());
-    }
-    return result;
-  }
-
-  private Field getFieldByName(String fieldName) {
-    for (Field field : fields) {
-      if (fieldName.equals(field.getName())) {
-        return field;
-      }
-    }
-
-    return null;
-  }
 }

@@ -19,13 +19,13 @@ public class BoardRetriever extends BaseRetriever {
   /**
    * Returns the information of an specific board.
    * 
-   * @param mesosBoardId
+   * @param boardId
    *          Board identifier.
    * @return Board information.
    */
-  public Board getBoard(String mesosBoardId) {
+  public Board getBoard(String boardId) {
     String uri = getConfiguration().getHostAndContext() + ALL_BOARDS_RESOURCE + "/{boardId}";
-    WebTarget target = getClient().target(uri).resolveTemplate("boardId", mesosBoardId);
+    WebTarget target = getClient().target(uri).resolveTemplate("boardId", boardId);
     Builder builder = getBuilder(target);
 
     return builder.get(Board.class);

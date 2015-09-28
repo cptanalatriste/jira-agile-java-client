@@ -1,9 +1,9 @@
 package crest.jira.data.retriever;
 
 import crest.jira.data.retriever.map.IssueListMapper;
+import crest.jira.data.retriever.map.IssueWithCustomFields;
 import crest.jira.data.retriever.map.ResponseList;
 import crest.jira.data.retriever.model.Field;
-import crest.jira.data.retriever.model.Issue;
 import crest.jira.data.retriever.model.Sprint;
 
 import java.text.ParseException;
@@ -54,7 +54,7 @@ public class SprintRetriever extends BaseRetriever {
    * @throws ParseException
    *           In case of Date Parsing problems.
    */
-  public ResponseList<Issue> getIssuesForSprint(String boardId, String sprintId)
+  public ResponseList<IssueWithCustomFields> getIssuesForSprint(String boardId, String sprintId)
       throws ParseException {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
         + SPRINT_PATH + "/{sprintId}/issue";

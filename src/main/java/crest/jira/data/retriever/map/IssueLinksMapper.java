@@ -1,6 +1,5 @@
 package crest.jira.data.retriever.map;
 
-import crest.jira.data.retriever.model.Field;
 import crest.jira.data.retriever.model.IssueLink;
 import crest.jira.data.retriever.model.IssueLinkType;
 
@@ -19,9 +18,9 @@ public class IssueLinksMapper {
   /**
    * Initializes instance attributes.
    */
-  public IssueLinksMapper(Field[] fields) {
+  public IssueLinksMapper() {
     objectMapper = new ObjectMapper();
-    issueMapper = new IssueMapper(fields);
+    issueMapper = new IssueMapper();
 
   }
 

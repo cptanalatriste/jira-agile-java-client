@@ -11,7 +11,7 @@ public class Issue extends JiraEntity {
   // TODO(cgavidia): Add a proper type.
   private String timespent;
   private String aggregatetimespent;
-  private String lastViewed;
+  private Date lastViewed;
   private String timeestimate;
   private String aggregatetimeoriginalestimate;
   private String timeoriginalestimate;
@@ -47,8 +47,15 @@ public class Issue extends JiraEntity {
   private ResponseList<Comment> comment;
   private Votes votes;
   private Sprint[] closedSprints;
-  private double storyPoints;
-  private Sprint[] sprints;
+  private Sprint sprint;
+
+  public Sprint getSprint() {
+    return sprint;
+  }
+
+  public void setSprint(Sprint sprint) {
+    this.sprint = sprint;
+  }
 
   public Sprint[] getClosedSprints() {
     return closedSprints;
@@ -138,11 +145,11 @@ public class Issue extends JiraEntity {
     this.workratio = workratio;
   }
 
-  public String getLastViewed() {
+  public Date getLastViewed() {
     return lastViewed;
   }
 
-  public void setLastViewed(String lastViewed) {
+  public void setLastViewed(Date lastViewed) {
     this.lastViewed = lastViewed;
   }
 
@@ -353,21 +360,4 @@ public class Issue extends JiraEntity {
   public void setWorklog(ResponseList<Object> worklog) {
     this.worklog = worklog;
   }
-
-  public double getStoryPoints() {
-    return storyPoints;
-  }
-
-  public void setStoryPoints(double storyPoints) {
-    this.storyPoints = storyPoints;
-  }
-
-  public Sprint[] getSprints() {
-    return sprints;
-  }
-
-  public void setSprints(Sprint[] sprints) {
-    this.sprints = sprints;
-  }
-
 }

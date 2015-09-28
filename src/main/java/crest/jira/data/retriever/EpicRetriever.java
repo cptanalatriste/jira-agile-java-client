@@ -1,10 +1,10 @@
 package crest.jira.data.retriever;
 
 import crest.jira.data.retriever.map.IssueListMapper;
+import crest.jira.data.retriever.map.IssueWithCustomFields;
 import crest.jira.data.retriever.map.ResponseList;
 import crest.jira.data.retriever.model.Epic;
 import crest.jira.data.retriever.model.Field;
-import crest.jira.data.retriever.model.Issue;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -17,12 +17,27 @@ import javax.ws.rs.core.GenericType;
 
 public class EpicRetriever extends BaseRetriever {
 
-  private static final String EPIC_PATH = "/{boardId}/epic";
+  private static final String EPIC_PATH = "/rest/agile/latest/epic/{epicId}";
+  private static final String EPIC_PER_BOARD_PATH = "/{boardId}/epic";
   private Field[] fields;
 
   public EpicRetriever(Client client, JiraApiConfiguration configuration, Field[] fields) {
     super(client, configuration);
     this.fields = fields;
+  }
+
+  /**
+   * Returns Epic information.
+   * 
+   * @param epicId
+   *          Epic identifier.
+   * @return Epic instance.
+   */
+  public Epic getEpic(String epicId) {
+    String uri = getConfiguration().getHostAndContext() + EPIC_PATH;
+    WebTarget target = getClient().target(uri).resolveTemplate("epicId", epicId);
+
+    return getBuilder(target).get(Epic.class);
   }
 
   /**
@@ -34,7 +49,7 @@ public class EpicRetriever extends BaseRetriever {
    */
   public ResponseList<Epic> getEpics(String mesosBoardId) {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
-        + EPIC_PATH;
+        + EPIC_PER_BOARD_PATH;
     WebTarget target = getClient().target(uri).resolveTemplate("boardId", mesosBoardId);
     Builder builder = getBuilder(target);
 
@@ -54,10 +69,10 @@ public class EpicRetriever extends BaseRetriever {
    * @throws ParseException
    *           In case of Date Parsing problems.
    */
-  public ResponseList<Issue> getIssuesForEpic(String mesosBoardId, long epicId)
+  public ResponseList<IssueWithCustomFields> getIssuesForEpic(String mesosBoardId, String epicId)
       throws ParseException {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
-        + EPIC_PATH + "/{epicId}/issue";
+        + EPIC_PER_BOARD_PATH + "/{epicId}/issue";
     Map<String, Object> templateValues = new HashMap<String, Object>();
     templateValues.put("boardId", mesosBoardId);
     templateValues.put("epicId", epicId);
