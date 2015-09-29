@@ -3,6 +3,7 @@ package crest.jira.data.retriever.map;
 import crest.jira.data.retriever.model.Comment;
 import crest.jira.data.retriever.model.Component;
 import crest.jira.data.retriever.model.Epic;
+import crest.jira.data.retriever.model.History;
 import crest.jira.data.retriever.model.Issue;
 import crest.jira.data.retriever.model.IssueType;
 import crest.jira.data.retriever.model.Priority;
@@ -150,7 +151,8 @@ public class IssueMapper {
     if (commentInMap != null) {
       ResponseListMapper<Comment> commentListMapper = new ResponseListMapper<Comment>("comments",
           Comment.class);
-      issue.setComment(commentListMapper.map((Map) commentInMap));
+      ResponseList<Comment> responseList = commentListMapper.map((Map) commentInMap);
+      issue.setComment(responseList.getValues());
     }
 
     issue.setVotes(objectMapper.convertValue(issueFieldsMap.get("votes"), Votes.class));
@@ -159,12 +161,21 @@ public class IssueMapper {
     if (worklogInMap != null) {
       ResponseListMapper<Object> worklogListMapper = new ResponseListMapper<Object>("worklogs",
           Object.class);
-      issue.setWorklog(worklogListMapper.map((Map) worklogInMap));
+      ResponseList<Object> responseList = worklogListMapper.map((Map) worklogInMap);
+      issue.setWorklog(responseList.getValues());
     }
 
     issue.setClosedSprints(
         objectMapper.convertValue(issueFieldsMap.get("closedSprints"), Sprint[].class));
     issue.setSprint(objectMapper.convertValue(issueFieldsMap.get("sprint"), Sprint.class));
+
+    Object changeLogInMap = issueMap.get("changelog");
+    if (changeLogInMap != null) {
+      ResponseListMapper<History> changeLogListMapper = new ResponseListMapper<History>("histories",
+          History.class);
+      ResponseList<History> responseList = changeLogListMapper.map((Map) changeLogInMap);
+      issue.setChangeLog(responseList.getValues());
+    }
 
     return issue;
   }

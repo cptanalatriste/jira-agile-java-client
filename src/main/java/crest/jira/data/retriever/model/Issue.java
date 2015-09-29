@@ -1,7 +1,5 @@
 package crest.jira.data.retriever.model;
 
-import crest.jira.data.retriever.map.ResponseList;
-
 import java.util.Date;
 
 public class Issue extends JiraEntity {
@@ -20,7 +18,7 @@ public class Issue extends JiraEntity {
   private Object subtasks;
   private String environment;
   private String duedate;
-  private ResponseList<Object> worklog;
+  private Object[] worklog;
 
   private Project project;
   private Version[] fixVersions;
@@ -44,10 +42,20 @@ public class Issue extends JiraEntity {
   private User reporter;
   private Progress aggregateprogress;
   private Progress progress;
-  private ResponseList<Comment> comment;
+  private Comment[] comment;
   private Votes votes;
   private Sprint[] closedSprints;
   private Sprint sprint;
+
+  private History[] changeLog;
+
+  public History[] getChangeLog() {
+    return changeLog;
+  }
+
+  public void setChangeLog(History[] changeLog) {
+    this.changeLog = changeLog;
+  }
 
   public Sprint getSprint() {
     return sprint;
@@ -337,11 +345,11 @@ public class Issue extends JiraEntity {
     this.progress = progress;
   }
 
-  public ResponseList<Comment> getComment() {
+  public Comment[] getComment() {
     return comment;
   }
 
-  public void setComment(ResponseList<Comment> comment) {
+  public void setComment(Comment[] comment) {
     this.comment = comment;
   }
 
@@ -353,11 +361,11 @@ public class Issue extends JiraEntity {
     this.votes = votes;
   }
 
-  public ResponseList<Object> getWorklog() {
+  public Object[] getWorklog() {
     return worklog;
   }
 
-  public void setWorklog(ResponseList<Object> worklog) {
+  public void setWorklog(Object[] worklog) {
     this.worklog = worklog;
   }
 }
