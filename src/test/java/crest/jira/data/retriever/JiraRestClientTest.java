@@ -8,6 +8,7 @@ import junit.framework.TestSuite;
  * Unit test for simple App.
  */
 public class JiraRestClientTest extends TestCase {
+
   /**
    * Create the test case
    *
@@ -19,7 +20,7 @@ public class JiraRestClientTest extends TestCase {
   }
 
   /**
-   * @return the suite of tests being tested
+   * the suite of tests being tested
    */
   public static Test suite() {
     return new TestSuite(JiraRestClientTest.class);
