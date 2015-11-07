@@ -1,14 +1,21 @@
 package crest.jira.data.retriever.model;
 
+import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang.builder.EqualsBuilder;
 
 public class JiraEntity {
 
+  @DatabaseField(id = true)
   private String id;
+  @DatabaseField
   private String self;
+  @DatabaseField
   private String name;
+  @DatabaseField
   private String description;
+  @DatabaseField
   private String key;
+  @DatabaseField
   private String expand;
 
   public String getId() {
