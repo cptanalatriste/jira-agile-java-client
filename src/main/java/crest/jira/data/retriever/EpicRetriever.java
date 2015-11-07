@@ -8,8 +8,8 @@ import crest.jira.data.retriever.model.Field;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation.Builder;
@@ -18,15 +18,25 @@ import javax.ws.rs.core.GenericType;
 
 public class EpicRetriever extends BaseRetriever {
 
-  private static Logger logger = Logger.getLogger(EpicRetriever.class.getName());
-
   private static final String EPIC_PATH = "/rest/agile/latest/epic/{epicId}";
   private static final String EPIC_PER_BOARD_PATH = "/{boardId}/epic";
   private Field[] fields;
+  private PaginationBuilder<Epic> paginationBuilder;
 
+  /**
+   * Produces an instance for retrieving Epic information.
+   * 
+   * @param client
+   *          Jersey Client.
+   * @param configuration
+   *          Repository configuration.
+   * @param fields
+   *          Field meta-data.
+   */
   public EpicRetriever(Client client, JiraApiConfiguration configuration, Field[] fields) {
     super(client, configuration);
     this.fields = fields;
+    this.paginationBuilder = new PaginationBuilder<Epic>(this);
   }
 
   /**
@@ -50,17 +60,14 @@ public class EpicRetriever extends BaseRetriever {
    *          Board identifier.
    * @return List of Epics.
    */
-  public ResponseList<Epic> getEpics(String mesosBoardId) {
+  public List<Epic> getEpics(String mesosBoardId) {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
         + EPIC_PER_BOARD_PATH;
     WebTarget target = getClient().target(uri).resolveTemplate("boardId", mesosBoardId);
 
-    logger.info("Requesting the following Resource: " + target.getUri());
-    Builder builder = getBuilder(target);
-
-    return builder.get(new GenericType<ResponseList<Epic>>() {
-
+    List<Epic> epics = paginationBuilder.get(target, new GenericType<ResponseList<Epic>>() {
     });
+    return epics;
   }
 
   /**
