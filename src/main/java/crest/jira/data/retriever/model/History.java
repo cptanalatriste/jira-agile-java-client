@@ -1,12 +1,22 @@
 package crest.jira.data.retriever.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.Date;
 
+@DatabaseTable(tableName = "History")
 public class History {
 
+  @DatabaseField
   private String id;
+  @DatabaseField(foreign = true)
   private User author;
+
+  @DatabaseField
   private Date created;
+
+  @DatabaseField(foreign = true)
   private ChangeLogItem[] items;
 
   public String getId() {

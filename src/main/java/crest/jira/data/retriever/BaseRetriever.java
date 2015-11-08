@@ -8,6 +8,7 @@ import javax.ws.rs.client.WebTarget;
 
 public abstract class BaseRetriever {
 
+  private static final String EXPAND_PARAM = "expand";
   private static final String AUTH_HEADER_NAME = "Authorization";
   private static final String AUTH_VALUE_PREFIX = " Basic ";
 
@@ -41,6 +42,18 @@ public abstract class BaseRetriever {
     String authorizationValue = configuration.getAuthenticationValue();
     byte[] encodedBytes = Base64.encodeBase64(authorizationValue.getBytes());
     return AUTH_VALUE_PREFIX + new String(encodedBytes);
+  }
+
+  protected WebTarget addExpandSupport(WebTarget target, String... expand) {
+    String expandValue = "";
+    for (String expandItem : expand) {
+      expandValue += expandItem + ",";
+    }
+
+    String queryParamValue = expandValue.substring(0, expandValue.length() - 1);
+
+    target = target.queryParam(EXPAND_PARAM, queryParamValue);
+    return target;
   }
 
   public JiraApiConfiguration getConfiguration() {

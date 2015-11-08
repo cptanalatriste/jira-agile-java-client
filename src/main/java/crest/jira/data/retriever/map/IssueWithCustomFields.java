@@ -20,6 +20,7 @@ public class IssueWithCustomFields {
     super();
     this.issue = issue;
     this.customFields = customFields;
+    this.customFields.setIssueId(issue.getId());
   }
 
   public Issue getIssue() {
@@ -37,5 +38,4 @@ public class IssueWithCustomFields {
   public void setCustomFields(CustomFieldsCatalog customFields) {
     this.customFields = customFields;
   }
-
 }

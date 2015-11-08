@@ -1,8 +1,13 @@
 package crest.jira.data.retriever.model;
 
-public class Status extends JiraEntity {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable(tableName = "Status")
+public class Status extends JiraEntity {
+  @DatabaseField
   private String iconUrl;
+  @DatabaseField(foreign = true)
   private StatusCategory statusCategory;
 
   public String getIconUrl() {

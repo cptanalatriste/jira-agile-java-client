@@ -1,9 +1,16 @@
 package crest.jira.data.retriever.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "IssueLink")
 public class IssueLink extends JiraEntity {
 
+  @DatabaseField(foreign = true)
   private IssueLinkType type;
+  @DatabaseField(foreign = true)
   private Issue outwardIssue;
+  @DatabaseField(foreign = true)
   private Issue inwardIssue;
 
   public IssueLinkType getType() {

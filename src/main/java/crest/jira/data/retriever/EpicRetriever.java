@@ -59,14 +59,16 @@ public class EpicRetriever extends BaseRetriever {
    * @param mesosBoardId
    *          Board identifier.
    * @return List of Epics.
+   * @throws ParseException
+   *           In case of map parsing issues.
    */
-  public List<Epic> getEpics(String mesosBoardId) {
+  public List<Epic> getEpics(String mesosBoardId) throws ParseException {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
         + EPIC_PER_BOARD_PATH;
     WebTarget target = getClient().target(uri).resolveTemplate("boardId", mesosBoardId);
 
     List<Epic> epics = paginationBuilder.get(target, new GenericType<ResponseList<Epic>>() {
-    });
+    }, null);
     return epics;
   }
 

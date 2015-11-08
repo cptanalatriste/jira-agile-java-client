@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class IssueMapper {
@@ -66,11 +67,11 @@ public class IssueMapper {
     Map issueFieldsMap = (Map) issueMap.get("fields");
 
     issue.setIssueType(objectMapper.convertValue(issueFieldsMap.get("issuetype"), IssueType.class));
-    issue.setTimespent((String) issueFieldsMap.get("timespent"));
+    issue.setTimespent((Integer) issueFieldsMap.get("timespent"));
     issue.setProject(objectMapper.convertValue(issueFieldsMap.get("project"), Project.class));
     issue.setFixVersions(
         objectMapper.convertValue(issueFieldsMap.get("fixVersions"), Version[].class));
-    issue.setAggregatetimespent((String) issueFieldsMap.get("aggregatetimespent"));
+    issue.setAggregatetimespent((Integer) issueFieldsMap.get("aggregatetimespent"));
     issue.setResolution(
         objectMapper.convertValue(issueFieldsMap.get("resolution"), Resolution.class));
 
@@ -103,9 +104,9 @@ public class IssueMapper {
       issue.setLabels(labels.toArray(new String[labels.size()]));
     }
 
-    issue.setTimeestimate((String) issueFieldsMap.get("timeestimate"));
+    issue.setTimeestimate((Integer) issueFieldsMap.get("timeestimate"));
     issue.setAggregatetimeoriginalestimate(
-        (String) issueFieldsMap.get("aggregatetimeoriginalestimate"));
+        (Integer) issueFieldsMap.get("aggregatetimeoriginalestimate"));
 
     issue.setVersions(objectMapper.convertValue(issueFieldsMap.get("versions"), Version[].class));
 
@@ -127,10 +128,10 @@ public class IssueMapper {
     issue.setStatus(objectMapper.convertValue(issueFieldsMap.get("status"), Status.class));
     issue.setComponents(
         objectMapper.convertValue(issueFieldsMap.get("components"), Component[].class));
-    issue.setTimeoriginalestimate((String) issueFieldsMap.get("timeoriginalestimate"));
+    issue.setTimeoriginalestimate((Integer) issueFieldsMap.get("timeoriginalestimate"));
     issue.setDescription((String) issueFieldsMap.get("description"));
-    issue.setTimetracking(issueFieldsMap.get("timetracking"));
-    issue.setAggregatetimeestimate((String) issueFieldsMap.get("aggregatetimeestimate"));
+    issue.setTimetracking((Map) issueFieldsMap.get("timetracking"));
+    issue.setAggregatetimeestimate((Integer) issueFieldsMap.get("aggregatetimeestimate"));
 
     Object flaggedObject = issueFieldsMap.get("flagged");
     if (flaggedObject != null) {
@@ -139,7 +140,22 @@ public class IssueMapper {
 
     issue.setSummary((String) issueFieldsMap.get("summary"));
     issue.setCreator(objectMapper.convertValue(issueFieldsMap.get("creator"), User.class));
-    issue.setSubtasks(issueFieldsMap.get("subtasks"));
+
+    ArrayList<Map<String, Object>> subtasksMap = (ArrayList<Map<String, Object>>) issueFieldsMap
+        .get("subtasks");
+
+    // TODO(cgavidia): This should be a method. And every complex mapping.
+    List<Issue> responseAsList = new ArrayList<Issue>();
+    if (subtasksMap != null && subtasksMap.size() > 0) {
+      IssueMapper issueMapper = new IssueMapper();
+
+      for (Map<String, Object> subtaskMap : subtasksMap) {
+        responseAsList.add(issueMapper.map((Map) subtaskMap));
+      }
+
+      issue.setSubtasks(responseAsList.toArray(new Issue[responseAsList.size()]));
+    }
+
     issue.setReporter(objectMapper.convertValue(issueFieldsMap.get("reporter"), User.class));
     issue.setAggregateprogress(
         objectMapper.convertValue(issueFieldsMap.get("aggregateprogress"), Progress.class));
@@ -162,7 +178,7 @@ public class IssueMapper {
       ResponseListMapper<Object> worklogListMapper = new ResponseListMapper<Object>("worklogs",
           Object.class);
       ResponseList<Object> responseList = worklogListMapper.map((Map) worklogInMap);
-      issue.setWorklog(responseList.getValues());
+      issue.setWorklog((Object[]) responseList.getValues());
     }
 
     issue.setClosedSprints(

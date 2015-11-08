@@ -1,12 +1,20 @@
 package crest.jira.data.retriever.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.Date;
 
+@DatabaseTable(tableName = "Version")
 public class Version extends JiraEntity {
 
+  @DatabaseField
   private String projectId;
+  @DatabaseField
   private boolean archived;
+  @DatabaseField
   private boolean released;
+  @DatabaseField
   private Date releaseDate;
 
   public boolean isArchived() {

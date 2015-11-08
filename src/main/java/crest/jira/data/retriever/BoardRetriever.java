@@ -45,12 +45,12 @@ public class BoardRetriever extends BaseRetriever {
     });
   }
 
-  public void getIssuesForBacklog() {
+  public void getIssuesForBoard() {
     // TODO(cgavidia): Pending, currently the resourse is producing errors.
     // Check https://issues.apache.org/jira/rest/agile/1.0/board/35/backlog
   }
 
-  public void getIssuesForBoard() {
+  public void getIssuesForBacklog() {
     // TODO(cgavidia): Pending, currently the resourse is producing errors.
     // Check https://issues.apache.org/jira/rest/agile/1.0/board/35/backlog
   }

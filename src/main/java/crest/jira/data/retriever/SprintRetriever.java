@@ -8,15 +8,22 @@ import crest.jira.data.retriever.model.Sprint;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.Response;
 
 public class SprintRetriever extends BaseRetriever {
 
+  private static Logger logger = Logger.getLogger(SprintRetriever.class.getName());
+
+  private static final String SPRINT_UNSUPPORTED = 
+      "Bad Request. It is possible that this board doesn't support Sprints";
   private static final String SPRINT_PER_BOARD_PATH = "/{boardId}/sprint";
   private static final String SPRINT_PATH = "/rest/agile/latest/sprint/{sprintId}";
 
@@ -54,7 +61,15 @@ public class SprintRetriever extends BaseRetriever {
     WebTarget target = getClient().target(uri).resolveTemplate("boardId", boardId);
     Builder builder = getBuilder(target);
 
-    return builder.get(new GenericType<ResponseList<Sprint>>() {
+    logger.info("Requesting the following Resource: " + target.getUri());
+
+    Response response = builder.get(Response.class);
+    if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+      logger.info(SPRINT_UNSUPPORTED + "\n Board Id: " + boardId);
+      return null;
+    }
+
+    return response.readEntity(new GenericType<ResponseList<Sprint>>() {
 
     });
   }
@@ -70,8 +85,8 @@ public class SprintRetriever extends BaseRetriever {
    * @throws ParseException
    *           In case of Date Parsing problems.
    */
-  public ResponseList<IssueWithCustomFields> getIssuesForSprint(String boardId, String sprintId)
-      throws ParseException {
+  public List<IssueWithCustomFields> getIssuesForSprint(String boardId, String sprintId,
+      String... expand) throws ParseException {
     String uri = getConfiguration().getHostAndContext() + BoardRetriever.ALL_BOARDS_RESOURCE
         + SPRINT_PER_BOARD_PATH + "/{sprintId}/issue";
     Map<String, Object> templateValues = new HashMap<String, Object>();
@@ -79,9 +94,15 @@ public class SprintRetriever extends BaseRetriever {
     templateValues.put("sprintId", sprintId);
 
     WebTarget target = getClient().target(uri).resolveTemplates(templateValues);
-    Builder builder = getBuilder(target);
+    if (expand != null && expand.length > 0) {
+      target = addExpandSupport(target, expand);
+    }
 
     IssueListMapper issueListMapper = new IssueListMapper(fields);
-    return issueListMapper.map(builder.get(Map.class));
+
+    PaginationBuilder<IssueWithCustomFields> builder = new PaginationBuilder<IssueWithCustomFields>(
+        this);
+    List<IssueWithCustomFields> issues = builder.get(target, null, issueListMapper);
+    return issues;
   }
 }

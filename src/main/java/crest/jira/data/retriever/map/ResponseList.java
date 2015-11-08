@@ -7,7 +7,7 @@ public class ResponseList<T> {
   private int maxResults;
   private int startAt;
   private int total;
-  private boolean isLast;
+  private Boolean isLast;
   private T[] values;
 
   public int getMaxResults() {
@@ -34,11 +34,11 @@ public class ResponseList<T> {
     this.total = total;
   }
 
-  public boolean getIsLast() {
+  public Boolean getIsLast() {
     return isLast;
   }
 
-  public void setIsLast(boolean isLast) {
+  public void setIsLast(Boolean isLast) {
     this.isLast = isLast;
   }
 

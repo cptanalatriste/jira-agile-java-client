@@ -2,6 +2,7 @@ package crest.jira.data.retriever.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 public class JiraEntity {
 
@@ -64,6 +65,11 @@ public class JiraEntity {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(id).toHashCode();
   }
 
   @Override

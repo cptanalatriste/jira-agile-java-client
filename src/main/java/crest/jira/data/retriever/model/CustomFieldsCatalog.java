@@ -1,17 +1,35 @@
 package crest.jira.data.retriever.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.Date;
 
+@DatabaseTable(tableName = "CustomFieldsCatalog")
 public class CustomFieldsCatalog {
+  
+  @DatabaseField(generatedId = true)
+  private int id;
+  @DatabaseField
   private Double storyPoints;
+  // @DatabaseField(foreign = true)
   private Sprint[] sprint;
+  @DatabaseField
   private Date dateOfFirstResponse;
+  @DatabaseField
   private String globalRank;
+  @DatabaseField
   private String timeInStatus;
+  @DatabaseField
   private Double attachmentCount;
+  // @DatabaseField(foreign = true)
   private Version[] targetVersion;
+  @DatabaseField
   private String rank;
+  @DatabaseField(foreign = true)
   private User shepherd;
+  @DatabaseField
+  private String issueId;
 
   public Double getStoryPoints() {
     return storyPoints;
@@ -85,4 +103,11 @@ public class CustomFieldsCatalog {
     this.shepherd = shepherd;
   }
 
+  public String getIssueId() {
+    return issueId;
+  }
+
+  public void setIssueId(String issueId) {
+    this.issueId = issueId;
+  }
 }

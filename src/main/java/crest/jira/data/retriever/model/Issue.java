@@ -1,52 +1,103 @@
 package crest.jira.data.retriever.model;
 
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+import java.util.Map;
+
+@DatabaseTable(tableName = "Issue")
 public class Issue extends JiraEntity {
 
+  @DatabaseField(foreign = true)
   private IssueType issueType;
 
   // TODO(cgavidia): Add a proper type.
-  private String timespent;
-  private String aggregatetimespent;
+  @DatabaseField
+  private Integer timespent;
+  @DatabaseField
+  private Integer aggregatetimespent;
+  @DatabaseField
   private Date lastViewed;
-  private String timeestimate;
-  private String aggregatetimeoriginalestimate;
-  private String timeoriginalestimate;
-  private Object timetracking;
-  private String aggregatetimeestimate;
-  private Object subtasks;
+  @DatabaseField
+  private Integer timeestimate;
+  @DatabaseField
+  private Integer aggregatetimeoriginalestimate;
+  @DatabaseField
+  private Integer timeoriginalestimate;
+  // @DatabaseField
+  // Check this mapping issue
+  private Map<String, Object> timetracking;
+  @DatabaseField
+  private Integer aggregatetimeestimate;
+  // @DatabaseField
+  private Issue[] subtasks;
+  @DatabaseField
   private String environment;
+  @DatabaseField
   private String duedate;
+  // @DatabaseField
+  // Check this mapping issue
   private Object[] worklog;
 
+  // @DatabaseField(foreign = true)
   private Project project;
+  // @DatabaseField(foreign = true)
   private Version[] fixVersions;
+  //@DatabaseField(foreign = true, columnName = "resolutionId")
   private Resolution resolution;
+  @DatabaseField
   private Date resolutiondate;
+  @DatabaseField
   private int workratio;
+  // @DatabaseField(foreign = true)
   private Watches watches;
+  @DatabaseField
   private Date created;
+  // @DatabaseField(foreign = true)
   private Epic epic;
+  // @DatabaseField(foreign = true)
   private Priority priority;
+  // @DatabaseField
   private String[] labels;
+  // @DatabaseField(foreign = true)
   private Version[] versions;
+  // @DatabaseField(foreign = true)
   private IssueLink[] issuelinks;
+  // @DatabaseField(foreign = true)
   private User assignee;
+  @DatabaseField
   private Date updated;
+  // @DatabaseField(foreign = true)
   private Status status;
+  // @DatabaseField(foreign = true)
   private Component[] components;
+  @DatabaseField
   private boolean flagged;
+  @DatabaseField
   private String summary;
+  // @DatabaseField(foreign = true)
   private User creator;
+  // @DatabaseField(foreign = true)
   private User reporter;
+
+  // @DatabaseField(foreign = true)
   private Progress aggregateprogress;
+  // @DatabaseField(foreign = true)
   private Progress progress;
+
+  // @DatabaseField(foreign = true)
   private Comment[] comment;
+  // @DatabaseField(foreign = true)
   private Votes votes;
+
+  // @DatabaseField(foreign = true)
   private Sprint[] closedSprints;
+
+  // @DatabaseField(foreign = true)
   private Sprint sprint;
 
+  // @DatabaseField(foreign = true)
   private History[] changeLog;
 
   public History[] getChangeLog() {
@@ -97,11 +148,11 @@ public class Issue extends JiraEntity {
     this.issueType = issueType;
   }
 
-  public String getTimespent() {
+  public Integer getTimespent() {
     return timespent;
   }
 
-  public void setTimespent(String timeSpent) {
+  public void setTimespent(Integer timeSpent) {
     this.timespent = timeSpent;
   }
 
@@ -121,11 +172,11 @@ public class Issue extends JiraEntity {
     this.fixVersions = fixVersions;
   }
 
-  public String getAggregatetimespent() {
+  public Integer getAggregatetimespent() {
     return aggregatetimespent;
   }
 
-  public void setAggregatetimespent(String aggregatetimespent) {
+  public void setAggregatetimespent(Integer aggregatetimespent) {
     this.aggregatetimespent = aggregatetimespent;
   }
 
@@ -201,19 +252,19 @@ public class Issue extends JiraEntity {
     this.labels = labels;
   }
 
-  public String getTimeestimate() {
+  public Integer getTimeestimate() {
     return timeestimate;
   }
 
-  public void setTimeestimate(String timeestimate) {
+  public void setTimeestimate(Integer timeestimate) {
     this.timeestimate = timeestimate;
   }
 
-  public String getAggregatetimeoriginalestimate() {
+  public Integer getAggregatetimeoriginalestimate() {
     return aggregatetimeoriginalestimate;
   }
 
-  public void setAggregatetimeoriginalestimate(String aggregatetimeoriginalestimate) {
+  public void setAggregatetimeoriginalestimate(Integer aggregatetimeoriginalestimate) {
     this.aggregatetimeoriginalestimate = aggregatetimeoriginalestimate;
   }
 
@@ -249,27 +300,27 @@ public class Issue extends JiraEntity {
     this.components = components;
   }
 
-  public String getTimeoriginalestimate() {
+  public Integer getTimeoriginalestimate() {
     return timeoriginalestimate;
   }
 
-  public void setTimeoriginalestimate(String timeoriginalestimate) {
+  public void setTimeoriginalestimate(Integer timeoriginalestimate) {
     this.timeoriginalestimate = timeoriginalestimate;
   }
 
-  public Object getTimetracking() {
+  public Map<String, Object> getTimetracking() {
     return timetracking;
   }
 
-  public void setTimetracking(Object timetracking) {
+  public void setTimetracking(Map<String, Object> timetracking) {
     this.timetracking = timetracking;
   }
 
-  public String getAggregatetimeestimate() {
+  public Integer getAggregatetimeestimate() {
     return aggregatetimeestimate;
   }
 
-  public void setAggregatetimeestimate(String aggregatetimeestimate) {
+  public void setAggregatetimeestimate(Integer aggregatetimeestimate) {
     this.aggregatetimeestimate = aggregatetimeestimate;
   }
 
@@ -297,11 +348,11 @@ public class Issue extends JiraEntity {
     this.creator = creator;
   }
 
-  public Object getSubtasks() {
+  public Issue[] getSubtasks() {
     return subtasks;
   }
 
-  public void setSubtasks(Object subtasks) {
+  public void setSubtasks(Issue[] subtasks) {
     this.subtasks = subtasks;
   }
 

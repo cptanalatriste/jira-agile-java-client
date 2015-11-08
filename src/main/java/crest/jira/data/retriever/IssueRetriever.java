@@ -15,7 +15,6 @@ import javax.ws.rs.client.WebTarget;
 
 public class IssueRetriever extends BaseRetriever {
 
-  private static final String EXPAND_PARAM = "expand";
   private static final String ISSUE_PATH = "/rest/agile/latest/issue/{issueIdOrKey}";
   private IssueMapper issueMapper;
   private CustomFieldMapper customFieldMapper;
@@ -64,15 +63,4 @@ public class IssueRetriever extends BaseRetriever {
     return new IssueWithCustomFields(issue, customFields);
   }
 
-  private WebTarget addExpandSupport(WebTarget target, String... expand) {
-    String expandValue = "";
-    for (String expandItem : expand) {
-      expandValue += expandItem + ",";
-    }
-
-    String queryParamValue = expandValue.substring(0, expandValue.length() - 1);
-
-    target = target.queryParam(EXPAND_PARAM, queryParamValue);
-    return target;
-  }
 }
