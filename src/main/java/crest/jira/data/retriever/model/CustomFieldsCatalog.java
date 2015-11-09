@@ -7,9 +7,9 @@ import java.util.Date;
 
 @DatabaseTable(tableName = "CustomFieldsCatalog")
 public class CustomFieldsCatalog {
-  
-  @DatabaseField(generatedId = true)
-  private int id;
+
+  @DatabaseField(id = true)
+  private String issueId;
   @DatabaseField
   private Double storyPoints;
   // @DatabaseField(foreign = true)
@@ -28,8 +28,6 @@ public class CustomFieldsCatalog {
   private String rank;
   @DatabaseField(foreign = true)
   private User shepherd;
-  @DatabaseField
-  private String issueId;
 
   public Double getStoryPoints() {
     return storyPoints;

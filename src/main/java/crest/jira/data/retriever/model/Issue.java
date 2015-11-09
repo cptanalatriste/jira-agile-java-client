@@ -9,7 +9,7 @@ import java.util.Map;
 @DatabaseTable(tableName = "Issue")
 public class Issue extends JiraEntity {
 
-  @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "issueTypeId")
   private IssueType issueType;
 
   // TODO(cgavidia): Add a proper type.
@@ -44,7 +44,7 @@ public class Issue extends JiraEntity {
   private Project project;
   // @DatabaseField(foreign = true)
   private Version[] fixVersions;
-  //@DatabaseField(foreign = true, columnName = "resolutionId")
+  @DatabaseField(foreign = true, columnName = "resolutionId")
   private Resolution resolution;
   @DatabaseField
   private Date resolutiondate;
@@ -54,9 +54,9 @@ public class Issue extends JiraEntity {
   private Watches watches;
   @DatabaseField
   private Date created;
-  // @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "epicId")
   private Epic epic;
-  // @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "priorityId")
   private Priority priority;
   // @DatabaseField
   private String[] labels;

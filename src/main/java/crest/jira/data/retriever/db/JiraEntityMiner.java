@@ -94,6 +94,10 @@ public class JiraEntityMiner<T, I> {
     deleteBuilder.delete();
   }
 
+  public Dao<T, I> getEntityDao() {
+    return entityDao;
+  }
+
   /**
    * Validates is the response retrieved from the Server comes paginated.
    * 
