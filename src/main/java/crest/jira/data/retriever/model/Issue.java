@@ -3,16 +3,21 @@ package crest.jira.data.retriever.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import crest.jira.data.retriever.map.ResponseList;
+
 import java.util.Date;
 import java.util.Map;
 
 @DatabaseTable(tableName = "Issue")
 public class Issue extends JiraEntity {
 
+  // TODO(cgavidia): Add board field, for those issues without Sprint.
+
+  private static final String SEPARATOR = ";";
+
   @DatabaseField(foreign = true, columnName = "issueTypeId")
   private IssueType issueType;
 
-  // TODO(cgavidia): Add a proper type.
   @DatabaseField
   private Integer timespent;
   @DatabaseField
@@ -26,24 +31,32 @@ public class Issue extends JiraEntity {
   @DatabaseField
   private Integer timeoriginalestimate;
   // @DatabaseField
-  // Check this mapping issue
+  // TODO(cgavidia): Check this mapping issue. So far, no issue contains this
+  // information.
   private Map<String, Object> timetracking;
   @DatabaseField
   private Integer aggregatetimeestimate;
+
   // @DatabaseField
+  // TODO(cgavidia): Need to implement a many-to-many relationship here.
   private Issue[] subtasks;
   @DatabaseField
   private String environment;
   @DatabaseField
   private String duedate;
   // @DatabaseField
-  // Check this mapping issue
-  private Object[] worklog;
+  // TODO(cgavidia): Check this mapping issue. So far, no issue contains this
+  // information.
+  private ResponseList<Object> worklog;
 
-  // @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "projectId")
   private Project project;
   // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Check this mapping issue. Probably, a many-to-many
+  // relation.
   private Version[] fixVersions;
+  private Version[] versions;
+
   @DatabaseField(foreign = true, columnName = "resolutionId")
   private Resolution resolution;
   @DatabaseField
@@ -51,6 +64,7 @@ public class Issue extends JiraEntity {
   @DatabaseField
   private int workratio;
   // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Persist this field. So far, doesn't seem that relevant.
   private Watches watches;
   @DatabaseField
   private Date created;
@@ -58,54 +72,72 @@ public class Issue extends JiraEntity {
   private Epic epic;
   @DatabaseField(foreign = true, columnName = "priorityId")
   private Priority priority;
-  // @DatabaseField
+
   private String[] labels;
+
+  @DatabaseField
+  private String concatenatedLabels;
+
   // @DatabaseField(foreign = true)
-  private Version[] versions;
-  // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Again, a many-to-many candidate.
   private IssueLink[] issuelinks;
-  // @DatabaseField(foreign = true)
+
+  @DatabaseField(foreign = true, columnName = "assigneeId")
   private User assignee;
+  @DatabaseField(foreign = true, columnName = "creatorId")
+  private User creator;
+  @DatabaseField(foreign = true, columnName = "reporterId")
+  private User reporter;
   @DatabaseField
   private Date updated;
-  // @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "statusId")
   private Status status;
   // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Again, a many-to-many candidate.
   private Component[] components;
   @DatabaseField
   private boolean flagged;
   @DatabaseField
   private String summary;
-  // @DatabaseField(foreign = true)
-  private User creator;
-  // @DatabaseField(foreign = true)
-  private User reporter;
 
   // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Persist this field. So far, doesn't seem that relevant.
   private Progress aggregateprogress;
   // @DatabaseField(foreign = true)
   private Progress progress;
 
+  private ResponseList<Comment> comment;
+
   // @DatabaseField(foreign = true)
-  private Comment[] comment;
-  // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Persist this field. So far, doesn't seem that relevant.
   private Votes votes;
 
   // @DatabaseField(foreign = true)
+  // TODO(cgavidia): Again, a many-to-many candidate.
   private Sprint[] closedSprints;
 
-  // @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "sprintId")
   private Sprint sprint;
 
-  // @DatabaseField(foreign = true)
-  private History[] changeLog;
+  private ResponseList<History> changeLog;
 
-  public History[] getChangeLog() {
+  public ResponseList<History> getChangeLog() {
     return changeLog;
   }
 
-  public void setChangeLog(History[] changeLog) {
+  /**
+   * Assigns the history of changes to an issue. Including the proper
+   * configuration of the Issue Id.
+   * 
+   * @param changeLog
+   *          List of changes.
+   */
+  public void setChangeLog(ResponseList<History> changeLog) {
     this.changeLog = changeLog;
+
+    for (History history : changeLog.getValues()) {
+      history.setIssueId(this.getId());
+    }
   }
 
   public Sprint getSprint() {
@@ -396,12 +428,23 @@ public class Issue extends JiraEntity {
     this.progress = progress;
   }
 
-  public Comment[] getComment() {
+  public ResponseList<Comment> getComment() {
     return comment;
   }
 
-  public void setComment(Comment[] comment) {
-    this.comment = comment;
+  /**
+   * Assigns a list of comments to this issue. It includes setting the proper
+   * IssueId to each comment.
+   * 
+   * @param comments
+   *          List of Comments as a Response List.
+   */
+  public void setComment(ResponseList<Comment> comments) {
+
+    for (Comment comment : comments.getValues()) {
+      comment.setIssueId(this.getId());
+    }
+    this.comment = comments;
   }
 
   public Votes getVotes() {
@@ -412,11 +455,30 @@ public class Issue extends JiraEntity {
     this.votes = votes;
   }
 
-  public Object[] getWorklog() {
+  public ResponseList<Object> getWorklog() {
     return worklog;
   }
 
-  public void setWorklog(Object[] worklog) {
+  public void setWorklog(ResponseList<Object> worklog) {
     this.worklog = worklog;
   }
+
+  /**
+   * Returns all labels as a concatenated string.
+   * 
+   * @return Concatenated string.
+   */
+  public String getConcatenatedLabels() {
+    String concatenated = "";
+    for (String label : labels) {
+      concatenated += label + SEPARATOR;
+    }
+
+    return concatenated;
+  }
+
+  public void setConcatenatedLabels(String concatenatedLabels) {
+    this.concatenatedLabels = concatenatedLabels;
+  }
+
 }

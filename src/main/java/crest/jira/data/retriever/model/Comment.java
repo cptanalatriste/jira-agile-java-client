@@ -8,13 +8,13 @@ import java.util.Date;
 @DatabaseTable(tableName = "Comment")
 public class Comment extends JiraEntity {
 
-  @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "authorId")
   private User author;
 
   @DatabaseField
   private String body;
 
-  @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "updateAuthorId")
   private User updateAuthor;
 
   @DatabaseField
@@ -24,6 +24,9 @@ public class Comment extends JiraEntity {
   private Date updated;
 
   @DatabaseField
+  private String issueId;
+
+  // @DatabaseField
   private Visibility visibility;
 
   public User getAuthor() {
@@ -64,6 +67,14 @@ public class Comment extends JiraEntity {
 
   public void setUpdated(Date updated) {
     this.updated = updated;
+  }
+
+  public String getIssueId() {
+    return issueId;
+  }
+
+  public void setIssueId(String issueId) {
+    this.issueId = issueId;
   }
 
   public Visibility getVisibility() {

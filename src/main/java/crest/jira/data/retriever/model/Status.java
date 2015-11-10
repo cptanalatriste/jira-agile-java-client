@@ -7,7 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Status extends JiraEntity {
   @DatabaseField
   private String iconUrl;
-  @DatabaseField(foreign = true)
+  @DatabaseField(foreign = true, columnName = "statusCategoryId")
   private StatusCategory statusCategory;
 
   public String getIconUrl() {

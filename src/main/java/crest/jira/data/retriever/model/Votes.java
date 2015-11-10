@@ -4,7 +4,10 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "Votes")
-public class Votes extends JiraEntity {
+public class Votes {
+
+  @DatabaseField
+  private String self;
 
   @DatabaseField
   private int votes;
@@ -26,6 +29,14 @@ public class Votes extends JiraEntity {
 
   public void setHasVoted(boolean hasVoted) {
     this.hasVoted = hasVoted;
+  }
+
+  public String getSelf() {
+    return self;
+  }
+
+  public void setSelf(String self) {
+    this.self = self;
   }
 
 }

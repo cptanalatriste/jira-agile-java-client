@@ -57,11 +57,6 @@ public class PaginationBuilder<T> {
         responseList = getResponseList(builder, listMapper);
       }
 
-      logger.info("responseList.getTotal() " + responseList.getTotal());
-      logger.info("responseList.getStartAt() " + responseList.getStartAt());
-      logger.info("responseList.getIsLast() " + responseList.getIsLast());
-      logger.info("responseList.getValues().length " + responseList.getValues().length);
-
       itemList.addAll(Arrays.asList(responseList.getValues()));
 
       if (responseList.getIsLast() != null) {

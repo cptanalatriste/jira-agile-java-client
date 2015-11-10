@@ -1,6 +1,7 @@
 package crest.jira.data.retriever.db;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
@@ -61,17 +62,18 @@ public class JiraEntityMiner<T, I> {
    * @throws Exception
    *           Required by the batch insert procedure.
    */
-  public void writeToDatabase(final List<T> values) throws Exception {
+  public CreateOrUpdateStatus writeToDatabase(final List<T> values) throws Exception {
     TableUtils.createTableIfNotExists(connectionSource, this.clazz);
-    entityDao.callBatchTasks(new Callable<Void>() {
+    return entityDao.callBatchTasks(new Callable<CreateOrUpdateStatus>() {
 
-      public Void call() throws Exception {
+      public CreateOrUpdateStatus call() throws Exception {
+        CreateOrUpdateStatus status = null;
 
         for (T entity : values) {
-          entityDao.createOrUpdate(entity);
+          status = entityDao.createOrUpdate(entity);
         }
 
-        return null;
+        return status;
       }
     });
   }
@@ -92,6 +94,18 @@ public class JiraEntityMiner<T, I> {
     deleteBuilder.where().eq(columnName, value);
 
     deleteBuilder.delete();
+  }
+
+  /**
+   * Clears all records on the table.
+   * 
+   * @throws SQLException
+   *           In case of SQL Problems.
+   */
+  public void deleteAll() throws SQLException {
+    // TODO(cgavidia): We should factor table creation.
+    TableUtils.createTableIfNotExists(connectionSource, this.clazz);
+    TableUtils.clearTable(connectionSource, this.clazz);
   }
 
   public Dao<T, I> getEntityDao() {

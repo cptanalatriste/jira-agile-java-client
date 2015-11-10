@@ -168,7 +168,7 @@ public class IssueMapper {
       ResponseListMapper<Comment> commentListMapper = new ResponseListMapper<Comment>("comments",
           Comment.class);
       ResponseList<Comment> responseList = commentListMapper.map((Map) commentInMap);
-      issue.setComment(responseList.getValues());
+      issue.setComment(responseList);
     }
 
     issue.setVotes(objectMapper.convertValue(issueFieldsMap.get("votes"), Votes.class));
@@ -178,7 +178,7 @@ public class IssueMapper {
       ResponseListMapper<Object> worklogListMapper = new ResponseListMapper<Object>("worklogs",
           Object.class);
       ResponseList<Object> responseList = worklogListMapper.map((Map) worklogInMap);
-      issue.setWorklog((Object[]) responseList.getValues());
+      issue.setWorklog(responseList);
     }
 
     issue.setClosedSprints(
@@ -190,7 +190,7 @@ public class IssueMapper {
       ResponseListMapper<History> changeLogListMapper = new ResponseListMapper<History>("histories",
           History.class);
       ResponseList<History> responseList = changeLogListMapper.map((Map) changeLogInMap);
-      issue.setChangeLog(responseList.getValues());
+      issue.setChangeLog(responseList);
     }
 
     return issue;

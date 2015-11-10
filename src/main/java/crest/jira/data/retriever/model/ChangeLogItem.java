@@ -5,22 +5,28 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "ChangeLogItem")
 public class ChangeLogItem {
-  
+
+  @DatabaseField(generatedId = true)
+  private int id;
+
+  @DatabaseField
+  private String historyId;
+
   @DatabaseField
   private String field;
-  
+
   @DatabaseField
   private String fieldtype;
-  
+
   @DatabaseField
   private String from;
-  
+
   @DatabaseField
   private String fromString;
-  
+
   @DatabaseField
   private String to;
-  
+
   @DatabaseField
   private String toString;
 
@@ -70,6 +76,22 @@ public class ChangeLogItem {
 
   public void setFieldtype(String fieldtype) {
     this.fieldtype = fieldtype;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public String getHistoryId() {
+    return historyId;
+  }
+
+  public void setHistoryId(String historyId) {
+    this.historyId = historyId;
   }
 
 }

@@ -1,8 +1,11 @@
 package crest.jira.data.retriever.model;
 
 import com.j256.ormlite.field.DatabaseField;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.util.Date;
 
 public class JiraEntity {
 
@@ -18,6 +21,8 @@ public class JiraEntity {
   private String key;
   @DatabaseField
   private String expand;
+  @DatabaseField
+  private Date retrievalDate = new Date();
 
   public String getId() {
     return id;
@@ -65,6 +70,14 @@ public class JiraEntity {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Date getRetrievalDate() {
+    return retrievalDate;
+  }
+
+  public void setRetrievalDate(Date retrievalDate) {
+    this.retrievalDate = retrievalDate;
   }
 
   @Override

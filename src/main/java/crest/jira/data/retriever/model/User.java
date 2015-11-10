@@ -7,8 +7,12 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({ "avatarUrls" })
 @DatabaseTable(tableName = "User")
-public class User extends JiraEntity {
+public class User {
 
+  @DatabaseField(id = true)
+  private String name;
+  @DatabaseField
+  private String self;
   @DatabaseField
   private String emailAddress;
   @DatabaseField
@@ -38,6 +42,22 @@ public class User extends JiraEntity {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getSelf() {
+    return self;
+  }
+
+  public void setSelf(String self) {
+    this.self = self;
   }
 
 }
