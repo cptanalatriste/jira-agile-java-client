@@ -5,7 +5,9 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import crest.jira.data.retriever.map.ResponseList;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @DatabaseTable(tableName = "Issue")
@@ -36,10 +38,9 @@ public class Issue extends JiraEntity {
   private Map<String, Object> timetracking;
   @DatabaseField
   private Integer aggregatetimeestimate;
-
-  // @DatabaseField
-  // TODO(cgavidia): Need to implement a many-to-many relationship here.
   private Issue[] subtasks;
+  private List<SubtaskPerIssue> substasksPerIssue = new ArrayList<SubtaskPerIssue>();
+
   @DatabaseField
   private String environment;
   @DatabaseField
@@ -51,11 +52,11 @@ public class Issue extends JiraEntity {
 
   @DatabaseField(foreign = true, columnName = "projectId")
   private Project project;
-  // @DatabaseField(foreign = true)
-  // TODO(cgavidia): Check this mapping issue. Probably, a many-to-many
-  // relation.
+
   private Version[] fixVersions;
+  private List<FixVersionPerIssue> fixVersionsPerIssue = new ArrayList<FixVersionPerIssue>();
   private Version[] versions;
+  private List<VersionPerIssue> versionsPerIssue = new ArrayList<VersionPerIssue>();
 
   @DatabaseField(foreign = true, columnName = "resolutionId")
   private Resolution resolution;
@@ -72,7 +73,6 @@ public class Issue extends JiraEntity {
   private Epic epic;
   @DatabaseField(foreign = true, columnName = "priorityId")
   private Priority priority;
-
   private String[] labels;
 
   @DatabaseField
@@ -92,9 +92,10 @@ public class Issue extends JiraEntity {
   private Date updated;
   @DatabaseField(foreign = true, columnName = "statusId")
   private Status status;
-  // @DatabaseField(foreign = true)
-  // TODO(cgavidia): Again, a many-to-many candidate.
+
   private Component[] components;
+  private List<ComponentPerIssue> componentsPerIssue = new ArrayList<ComponentPerIssue>();
+
   @DatabaseField
   private boolean flagged;
   @DatabaseField
@@ -115,6 +116,7 @@ public class Issue extends JiraEntity {
   // @DatabaseField(foreign = true)
   // TODO(cgavidia): Again, a many-to-many candidate.
   private Sprint[] closedSprints;
+  private List<ClosedSprintPerIssue> closedSprintsPerIssue = new ArrayList<ClosedSprintPerIssue>();
 
   @DatabaseField(foreign = true, columnName = "sprintId")
   private Sprint sprint;
@@ -152,8 +154,21 @@ public class Issue extends JiraEntity {
     return closedSprints;
   }
 
+  /**
+   * Assigns a group of Closed Sprints for an Issue.
+   * 
+   * @param closedSprints
+   *          Group of Closed Sprints.
+   */
   public void setClosedSprints(Sprint[] closedSprints) {
     this.closedSprints = closedSprints;
+
+    if (closedSprints != null && closedSprints.length > 0) {
+      for (Sprint theSprint : closedSprints) {
+        ClosedSprintPerIssue closedSprint = new ClosedSprintPerIssue(this, theSprint);
+        this.closedSprintsPerIssue.add(closedSprint);
+      }
+    }
   }
 
   public Status getStatus() {
@@ -200,8 +215,21 @@ public class Issue extends JiraEntity {
     return fixVersions;
   }
 
+  /**
+   * Associates fix versions to this issue.
+   * 
+   * @param fixVersions
+   *          Fix versions.
+   */
   public void setFixVersions(Version[] fixVersions) {
     this.fixVersions = fixVersions;
+
+    if (fixVersions != null && fixVersions.length > 0) {
+      for (Version theVersion : fixVersions) {
+        FixVersionPerIssue fixVersionPerIssue = new FixVersionPerIssue(this, theVersion);
+        fixVersionsPerIssue.add(fixVersionPerIssue);
+      }
+    }
   }
 
   public Integer getAggregatetimespent() {
@@ -280,8 +308,20 @@ public class Issue extends JiraEntity {
     return labels;
   }
 
+  /**
+   * Assigns a group of labels of this Issue. It also prepares the information
+   * for storage.
+   * 
+   * @param labels
+   *          Group of labels.
+   */
   public void setLabels(String[] labels) {
     this.labels = labels;
+
+    this.concatenatedLabels = "";
+    for (String oneLabel : labels) {
+      this.concatenatedLabels += oneLabel + SEPARATOR;
+    }
   }
 
   public Integer getTimeestimate() {
@@ -304,8 +344,21 @@ public class Issue extends JiraEntity {
     return versions;
   }
 
+  /**
+   * Configures a set of versions for an Issue.
+   * 
+   * @param versions
+   *          Set of versions.
+   */
   public void setVersions(Version[] versions) {
     this.versions = versions;
+
+    if (versions != null && versions.length > 0) {
+      for (Version theVersion : versions) {
+        VersionPerIssue versionPerIssue = new VersionPerIssue(this, theVersion);
+        this.versionsPerIssue.add(versionPerIssue);
+      }
+    }
   }
 
   public IssueLink[] getIssuelinks() {
@@ -328,8 +381,22 @@ public class Issue extends JiraEntity {
     return components;
   }
 
+  /**
+   * Configures the set of components related to an Issue.
+   * 
+   * @param components
+   *          Component list.
+   */
   public void setComponents(Component[] components) {
     this.components = components;
+
+    if (components != null && components.length > 0) {
+      for (Component theComponent : components) {
+        ComponentPerIssue componentPerIssue = new ComponentPerIssue(theComponent, this);
+        this.componentsPerIssue.add(componentPerIssue);
+      }
+    }
+
   }
 
   public Integer getTimeoriginalestimate() {
@@ -384,8 +451,21 @@ public class Issue extends JiraEntity {
     return subtasks;
   }
 
+  /**
+   * Assigns a list of issues as Subtasks.
+   * 
+   * @param subtasks
+   *          List of subtasks.
+   */
   public void setSubtasks(Issue[] subtasks) {
     this.subtasks = subtasks;
+
+    if (subtasks != null && subtasks.length > 0) {
+      for (Issue subtask : subtasks) {
+        SubtaskPerIssue subtaskPerIssue = new SubtaskPerIssue(this, subtask);
+        this.substasksPerIssue.add(subtaskPerIssue);
+      }
+    }
   }
 
   public User getReporter() {
@@ -463,22 +543,52 @@ public class Issue extends JiraEntity {
     this.worklog = worklog;
   }
 
-  /**
-   * Returns all labels as a concatenated string.
-   * 
-   * @return Concatenated string.
-   */
   public String getConcatenatedLabels() {
-    String concatenated = "";
-    for (String label : labels) {
-      concatenated += label + SEPARATOR;
-    }
-
-    return concatenated;
+    return concatenatedLabels;
   }
 
   public void setConcatenatedLabels(String concatenatedLabels) {
     this.concatenatedLabels = concatenatedLabels;
+  }
+
+  public List<ComponentPerIssue> getComponentsPerIssue() {
+    return componentsPerIssue;
+  }
+
+  public void setComponentsPerIssue(List<ComponentPerIssue> componentsPerIssue) {
+    this.componentsPerIssue = componentsPerIssue;
+  }
+
+  public List<SubtaskPerIssue> getSubstasksPerIssue() {
+    return substasksPerIssue;
+  }
+
+  public void setSubstasksPerIssue(List<SubtaskPerIssue> substasksPerIssue) {
+    this.substasksPerIssue = substasksPerIssue;
+  }
+
+  public List<FixVersionPerIssue> getFixVersionsPerIssue() {
+    return fixVersionsPerIssue;
+  }
+
+  public void setFixVersionsPerIssue(List<FixVersionPerIssue> fixVersionsPerIssue) {
+    this.fixVersionsPerIssue = fixVersionsPerIssue;
+  }
+
+  public List<VersionPerIssue> getVersionsPerIssue() {
+    return versionsPerIssue;
+  }
+
+  public void setVersionsPerIssue(List<VersionPerIssue> versionsPerIssue) {
+    this.versionsPerIssue = versionsPerIssue;
+  }
+
+  public List<ClosedSprintPerIssue> getClosedSprintsPerIssue() {
+    return closedSprintsPerIssue;
+  }
+
+  public void setClosedSprintsPerIssue(List<ClosedSprintPerIssue> closedSprintsPerIssue) {
+    this.closedSprintsPerIssue = closedSprintsPerIssue;
   }
 
 }
