@@ -63,19 +63,23 @@ public class JiraEntityMiner<T, I> {
    *           Required by the batch insert procedure.
    */
   public CreateOrUpdateStatus writeToDatabase(final List<T> values) throws Exception {
-    TableUtils.createTableIfNotExists(connectionSource, this.clazz);
-    return entityDao.callBatchTasks(new Callable<CreateOrUpdateStatus>() {
+    if (values != null && values.size() > 0) {
+      TableUtils.createTableIfNotExists(connectionSource, this.clazz);
+      return entityDao.callBatchTasks(new Callable<CreateOrUpdateStatus>() {
 
-      public CreateOrUpdateStatus call() throws Exception {
-        CreateOrUpdateStatus status = null;
+        public CreateOrUpdateStatus call() throws Exception {
+          CreateOrUpdateStatus status = null;
 
-        for (T entity : values) {
-          status = entityDao.createOrUpdate(entity);
+          for (T entity : values) {
+            status = entityDao.createOrUpdate(entity);
+          }
+
+          return status;
         }
+      });
+    }
 
-        return status;
-      }
-    });
+    return null;
   }
 
   /**

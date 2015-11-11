@@ -21,6 +21,9 @@ public class Issue extends JiraEntity {
   private IssueType issueType;
 
   @DatabaseField
+  private String boardId;
+
+  @DatabaseField
   private Integer timespent;
   @DatabaseField
   private Integer aggregatetimespent;
@@ -589,6 +592,14 @@ public class Issue extends JiraEntity {
 
   public void setClosedSprintsPerIssue(List<ClosedSprintPerIssue> closedSprintsPerIssue) {
     this.closedSprintsPerIssue = closedSprintsPerIssue;
+  }
+
+  public String getBoardId() {
+    return boardId;
+  }
+
+  public void setBoardId(String boardId) {
+    this.boardId = boardId;
   }
 
 }

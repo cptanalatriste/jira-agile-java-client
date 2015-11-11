@@ -38,9 +38,11 @@ public class PaginationBuilder<T> {
       ResponseListMapper<T> listMapper) throws ParseException {
     List<T> itemList = new ArrayList<T>();
     int startFrom = 0;
+    int pageSize = 1;
     boolean requestNextPage = true;
+    int totalItems = 1;
 
-    while (requestNextPage) {
+    while (requestNextPage && startFrom <= totalItems) {
       Object initialValue = null;
       // This is for clearing the startAt value
       webTarget = webTarget.queryParam(START_AT_PARAMETER, initialValue);
@@ -49,23 +51,33 @@ public class PaginationBuilder<T> {
 
       logger.info("Requesting the following Resource: " + webTarget.getUri());
 
-      ResponseList<T> responseList = null;
+      try {
+        ResponseList<T> responseList = new ResponseList<T>();
 
-      if (responseType != null) {
-        responseList = getResponseList(builder, responseType);
-      } else if (listMapper != null) {
-        responseList = getResponseList(builder, listMapper);
+        if (responseType != null) {
+          responseList = getResponseList(builder, responseType);
+        } else if (listMapper != null) {
+          responseList = getResponseList(builder, listMapper);
+        }
+
+        totalItems = responseList.getTotal();
+        itemList.addAll(Arrays.asList(responseList.getValues()));
+
+        if (responseList.getIsLast() != null) {
+          requestNextPage = !responseList.getIsLast();
+        } else {
+          requestNextPage = responseList.getValues().length > 0;
+        }
+        pageSize = responseList.getValues().length;
+      } catch (Exception e) {
+        logger.severe("An error ocurred while trying to access resource:  " + webTarget.getUri()
+            + "\n. We will attempt to fetch th next page.");
+        e.printStackTrace();
+
+        requestNextPage = true;
       }
 
-      itemList.addAll(Arrays.asList(responseList.getValues()));
-
-      if (responseList.getIsLast() != null) {
-        requestNextPage = !responseList.getIsLast();
-      } else {
-        requestNextPage = responseList.getValues().length > 0;
-      }
-
-      startFrom += responseList.getValues().length;
+      startFrom += pageSize;
     }
 
     return itemList;
