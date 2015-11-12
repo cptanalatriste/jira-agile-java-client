@@ -4,16 +4,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "ComponentsPerIssue")
-public class ComponentPerIssue {
-  @DatabaseField(generatedId = true)
-  private int id;
+public class ComponentPerIssue extends BoardRelatedEntity {
+
   @DatabaseField(foreign = true, columnName = "componentId")
   private Component component;
   @DatabaseField(foreign = true, columnName = "issueId")
   private Issue issue;
 
   public ComponentPerIssue() {
-
+    super(null);
   }
 
   /**
@@ -25,17 +24,9 @@ public class ComponentPerIssue {
    *          The issue.
    */
   public ComponentPerIssue(Component component, Issue issue) {
-    super();
+    super(issue.getBoardId());
     this.component = component;
     this.issue = issue;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public Component getComponent() {

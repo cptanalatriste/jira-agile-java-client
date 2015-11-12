@@ -4,17 +4,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "SubtaskPerIssue")
-public class SubtaskPerIssue {
+public class SubtaskPerIssue extends BoardRelatedEntity {
 
-  @DatabaseField(generatedId = true)
-  private int id;
   @DatabaseField(foreign = true, columnName = "issueId")
   private Issue issue;
   @DatabaseField(foreign = true, columnName = "subtaskId")
   private Issue subtask;
 
   public SubtaskPerIssue() {
-
+    super(null);
   }
 
   /**
@@ -26,17 +24,9 @@ public class SubtaskPerIssue {
    *          Subtask.
    */
   public SubtaskPerIssue(Issue issue, Issue subtask) {
-    super();
+    super(issue.getBoardId());
     this.issue = issue;
     this.subtask = subtask;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public Issue getIssue() {

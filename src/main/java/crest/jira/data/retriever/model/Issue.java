@@ -142,6 +142,10 @@ public class Issue extends JiraEntity {
 
     for (History history : changeLog.getValues()) {
       history.setIssueId(this.getId());
+
+      for (ChangeLogItem changeLogItem : history.getItems()) {
+        changeLogItem.setBoardId(this.getBoardId());
+      }
     }
   }
 

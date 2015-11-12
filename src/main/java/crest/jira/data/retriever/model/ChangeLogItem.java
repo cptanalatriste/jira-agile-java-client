@@ -4,10 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "ChangeLogItem")
-public class ChangeLogItem {
-
-  @DatabaseField(generatedId = true)
-  private int id;
+public class ChangeLogItem extends BoardRelatedEntity {
 
   @DatabaseField
   private String historyId;
@@ -29,6 +26,14 @@ public class ChangeLogItem {
 
   @DatabaseField
   private String toString;
+
+  public ChangeLogItem() {
+    super(null);
+  }
+
+  public ChangeLogItem(String boardId) {
+    super(boardId);
+  }
 
   public String getField() {
     return field;
@@ -78,14 +83,6 @@ public class ChangeLogItem {
     this.fieldtype = fieldtype;
   }
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
   public String getHistoryId() {
     return historyId;
   }
@@ -93,5 +90,4 @@ public class ChangeLogItem {
   public void setHistoryId(String historyId) {
     this.historyId = historyId;
   }
-
 }

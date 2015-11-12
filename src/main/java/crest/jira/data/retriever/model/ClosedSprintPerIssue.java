@@ -4,17 +4,15 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "ClosedSprintPerIssue")
-public class ClosedSprintPerIssue {
+public class ClosedSprintPerIssue extends BoardRelatedEntity {
 
-  @DatabaseField(generatedId = true)
-  private int id;
   @DatabaseField(foreign = true, columnName = "issueId")
   private Issue issue;
   @DatabaseField(foreign = true, columnName = "sprintId")
   private Sprint sprint;
 
   public ClosedSprintPerIssue() {
-
+    super(null);
   }
 
   /**
@@ -26,17 +24,9 @@ public class ClosedSprintPerIssue {
    *          The closed sprint.
    */
   public ClosedSprintPerIssue(Issue issue, Sprint sprint) {
-    super();
+    super(issue.getBoardId());
     this.issue = issue;
     this.sprint = sprint;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public Issue getIssue() {

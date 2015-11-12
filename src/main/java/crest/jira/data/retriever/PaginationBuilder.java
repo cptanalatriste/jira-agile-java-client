@@ -61,6 +61,8 @@ public class PaginationBuilder<T> {
         }
 
         totalItems = responseList.getTotal();
+        logger.info("Target " + totalItems);
+
         itemList.addAll(Arrays.asList(responseList.getValues()));
 
         if (responseList.getIsLast() != null) {

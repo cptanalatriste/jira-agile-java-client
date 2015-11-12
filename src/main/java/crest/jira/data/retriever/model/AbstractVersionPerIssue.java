@@ -2,10 +2,8 @@ package crest.jira.data.retriever.model;
 
 import com.j256.ormlite.field.DatabaseField;
 
-public abstract class AbstractVersionPerIssue {
+public abstract class AbstractVersionPerIssue extends BoardRelatedEntity {
 
-  @DatabaseField(generatedId = true)
-  private int id;
   @DatabaseField(foreign = true, columnName = "issueId")
   private Issue issue;
   @DatabaseField(foreign = true, columnName = "versionId")
@@ -20,17 +18,9 @@ public abstract class AbstractVersionPerIssue {
    *          The version.
    */
   public AbstractVersionPerIssue(Issue issue, Version version) {
-    super();
+    super(issue.getBoardId());
     this.issue = issue;
     this.version = version;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public Issue getIssue() {
