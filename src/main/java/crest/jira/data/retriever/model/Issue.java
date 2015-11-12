@@ -13,8 +13,6 @@ import java.util.Map;
 @DatabaseTable(tableName = "Issue")
 public class Issue extends JiraEntity {
 
-  // TODO(cgavidia): Add board field, for those issues without Sprint.
-
   private static final String SEPARATOR = ";";
 
   @DatabaseField(foreign = true, columnName = "issueTypeId")
@@ -142,10 +140,6 @@ public class Issue extends JiraEntity {
 
     for (History history : changeLog.getValues()) {
       history.setIssueId(this.getId());
-
-      for (ChangeLogItem changeLogItem : history.getItems()) {
-        changeLogItem.setBoardId(this.getBoardId());
-      }
     }
   }
 
@@ -602,8 +596,39 @@ public class Issue extends JiraEntity {
     return boardId;
   }
 
+  /**
+   * Configures the boardId, for a series of Issue attributes.
+   * 
+   * @param boardId
+   *          Board Id.
+   */
   public void setBoardId(String boardId) {
     this.boardId = boardId;
-  }
 
+    for (History history : this.getChangeLog().getValues()) {
+      for (ChangeLogItem changeLogItem : history.getItems()) {
+        changeLogItem.setBoardId(this.getBoardId());
+      }
+    }
+
+    for (ClosedSprintPerIssue sprintPerIssue : this.closedSprintsPerIssue) {
+      sprintPerIssue.setBoardId(boardId);
+    }
+
+    for (ComponentPerIssue componentPerIssue : this.componentsPerIssue) {
+      componentPerIssue.setBoardId(boardId);
+    }
+
+    for (SubtaskPerIssue subtaskPerIssue : this.substasksPerIssue) {
+      subtaskPerIssue.setBoardId(boardId);
+    }
+
+    for (VersionPerIssue versionPerIssue : this.versionsPerIssue) {
+      versionPerIssue.setBoardId(boardId);
+    }
+
+    for (FixVersionPerIssue fixVersionPerIssue : this.fixVersionsPerIssue) {
+      fixVersionPerIssue.setBoardId(boardId);
+    }
+  }
 }
