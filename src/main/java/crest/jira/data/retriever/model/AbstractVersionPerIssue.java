@@ -18,7 +18,7 @@ public abstract class AbstractVersionPerIssue extends BoardRelatedEntity {
    *          The version.
    */
   public AbstractVersionPerIssue(Issue issue, Version version) {
-    super(issue.getBoardId());
+    super(issue != null ? issue.getBoardId() : null);
     this.issue = issue;
     this.version = version;
   }

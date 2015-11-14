@@ -14,7 +14,7 @@ public class History {
   private User author;
   @DatabaseField
   private Date created;
-  @DatabaseField
+  @DatabaseField(index = true)
   private String issueId;
 
   private ChangeLogItem[] items;

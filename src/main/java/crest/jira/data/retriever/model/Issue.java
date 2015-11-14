@@ -18,7 +18,7 @@ public class Issue extends JiraEntity {
   @DatabaseField(foreign = true, columnName = "issueTypeId")
   private IssueType issueType;
 
-  @DatabaseField
+  @DatabaseField(index = true)
   private String boardId;
 
   @DatabaseField
@@ -138,9 +138,12 @@ public class Issue extends JiraEntity {
   public void setChangeLog(ResponseList<History> changeLog) {
     this.changeLog = changeLog;
 
-    for (History history : changeLog.getValues()) {
-      history.setIssueId(this.getId());
+    if (changeLog != null && changeLog.getValues() != null) {
+      for (History history : changeLog.getValues()) {
+        history.setIssueId(this.getId());
+      }
     }
+
   }
 
   public Sprint getSprint() {

@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "ChangeLogItem")
 public class ChangeLogItem extends BoardRelatedEntity {
 
-  @DatabaseField
+  @DatabaseField(index = true)
   private String historyId;
 
   @DatabaseField
