@@ -44,6 +44,11 @@ public class Issue extends JiraEntity {
 
   @DatabaseField
   private String environment;
+  
+  
+  /**
+   * The date by which this issue is scheduled to be completed.
+   */
   @DatabaseField
   private String duedate;
   // @DatabaseField
@@ -61,15 +66,31 @@ public class Issue extends JiraEntity {
 
   @DatabaseField(foreign = true, columnName = "resolutionId")
   private Resolution resolution;
-  @DatabaseField
-  private Date resolutiondate;
+
   @DatabaseField
   private int workratio;
   // @DatabaseField(foreign = true)
   // TODO(cgavidia): Persist this field. So far, doesn't seem that relevant.
   private Watches watches;
+  
+  /**
+   * The time and date on which this issue was entered into JIRA.
+   */
   @DatabaseField
-  private Date created;
+  private Date created; 
+
+  /**
+   * The time and date on which this issue was last edited.
+   */
+  @DatabaseField
+  private Date updated;
+  
+  /**
+   * The time and date on which this issue was resolved.
+   */
+  @DatabaseField
+  private Date resolutiondate;
+  
   @DatabaseField(foreign = true, columnName = "epicId")
   private Epic epic;
   @DatabaseField(foreign = true, columnName = "priorityId")
@@ -83,14 +104,20 @@ public class Issue extends JiraEntity {
   // TODO(cgavidia): Again, a many-to-many candidate.
   private IssueLink[] issuelinks;
 
+  /**
+   * The person to whom the issue is currently assigned.
+   */
   @DatabaseField(foreign = true, columnName = "assigneeId")
   private User assignee;
-  @DatabaseField(foreign = true, columnName = "creatorId")
-  private User creator;
+
+  /**
+   * The person who entered the issue into the system.
+   */
   @DatabaseField(foreign = true, columnName = "reporterId")
   private User reporter;
-  @DatabaseField
-  private Date updated;
+
+  @DatabaseField(foreign = true, columnName = "creatorId")
+  private User creator;
   @DatabaseField(foreign = true, columnName = "statusId")
   private Status status;
 
