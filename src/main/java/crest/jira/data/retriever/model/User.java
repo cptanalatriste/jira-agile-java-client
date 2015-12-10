@@ -3,6 +3,8 @@ package crest.jira.data.retriever.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties({ "avatarUrls" })
@@ -58,6 +60,29 @@ public class User {
 
   public void setSelf(String self) {
     this.self = self;
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(name).toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+
+    if (obj == this) {
+      return true;
+    }
+
+    if (obj.getClass() != getClass()) {
+      return false;
+    }
+
+    User user = (User) obj;
+    return new EqualsBuilder().append(name, user.name).isEquals();
   }
 
 }
