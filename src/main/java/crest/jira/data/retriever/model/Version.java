@@ -6,8 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @DatabaseTable(tableName = "Version")
@@ -65,8 +63,7 @@ public class Version extends JiraEntity {
 
   @Override
   public String toString() {
-    DateFormat dateFormat = new SimpleDateFormat("(dd-MM-yyyy)");
-    return this.getName() + " " + dateFormat.format(this.releaseDate);
+    return this.getName();
   }
 
   @Override
