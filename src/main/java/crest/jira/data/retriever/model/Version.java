@@ -3,19 +3,33 @@ package crest.jira.data.retriever.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @DatabaseTable(tableName = "Version")
 public class Version extends JiraEntity {
 
-  @DatabaseField
+  @DatabaseField(index = true)
   private String projectId;
   @DatabaseField
   private boolean archived;
   @DatabaseField
   private boolean released;
-  @DatabaseField
+  @DatabaseField(index = true)
   private Date releaseDate;
+
+  public Version() {
+
+  }
+
+  public Version(String name, Date releaseDate) {
+    this.setName(name);
+    this.releaseDate = releaseDate;
+  }
 
   public boolean isArchived() {
     return archived;
@@ -47,6 +61,33 @@ public class Version extends JiraEntity {
 
   public void setReleaseDate(Date releaseDate) {
     this.releaseDate = releaseDate;
+  }
+
+  @Override
+  public String toString() {
+    DateFormat dateFormat = new SimpleDateFormat("(dd-MM-yyyy)");
+    return this.getName() + " " + dateFormat.format(this.releaseDate);
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(this.getId()).toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    if (obj.getClass() != getClass()) {
+      return false;
+    }
+
+    JiraEntity rhs = (JiraEntity) obj;
+    return new EqualsBuilder().append(this.getId(), rhs.getId()).isEquals();
   }
 
 }

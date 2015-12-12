@@ -101,7 +101,7 @@ public class Issue extends JiraEntity {
   private String concatenatedLabels;
 
   // @DatabaseField(foreign = true)
-  // TODO(cgavidia): Again, a many-to-many candidate.
+  // TODO(cgavidia): Again, a many-to-many candidate. Persist this field if necessary.
   private IssueLink[] issuelinks;
 
   /**
@@ -141,8 +141,6 @@ public class Issue extends JiraEntity {
   // TODO(cgavidia): Persist this field. So far, doesn't seem that relevant.
   private Votes votes;
 
-  // @DatabaseField(foreign = true)
-  // TODO(cgavidia): Again, a many-to-many candidate.
   private Sprint[] closedSprints;
   private List<ClosedSprintPerIssue> closedSprintsPerIssue = new ArrayList<ClosedSprintPerIssue>();
 
