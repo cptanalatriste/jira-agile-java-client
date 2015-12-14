@@ -3,6 +3,8 @@ package crest.jira.data.retriever.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * An issue's priority indicates its relative importance.
  * 
@@ -26,12 +28,27 @@ public class Priority extends JiraEntity {
   @DatabaseField
   private String iconUrl;
 
+  public Priority() {
+
+  }
+
+  public Priority(String id, String name) {
+    this.setId(id);
+    this.setName(name);
+  }
+
   public String getIconUrl() {
     return iconUrl;
   }
 
   public void setIconUrl(String iconUrl) {
     this.iconUrl = iconUrl;
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this).append("name", this.getName()).append("id", this.getId())
+        .toString();
   }
 
 }
