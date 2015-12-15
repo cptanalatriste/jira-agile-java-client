@@ -24,8 +24,19 @@ public class Version extends JiraEntity {
 
   }
 
-  public Version(String name, Date releaseDate) {
+  /**
+   * Creates a Version instance providing basic information.
+   * 
+   * @param id
+   *          Identifier.
+   * @param name
+   *          Name.
+   * @param releaseDate
+   *          Release Date.
+   */
+  public Version(String id, String name, Date releaseDate) {
     this.setName(name);
+    this.setId(id);
     this.releaseDate = releaseDate;
   }
 
