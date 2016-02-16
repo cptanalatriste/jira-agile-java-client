@@ -30,6 +30,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "Status")
 public class Status extends JiraEntity {
+
   @DatabaseField
   private String iconUrl;
   @DatabaseField(foreign = true, columnName = "statusCategoryId")
@@ -50,5 +51,4 @@ public class Status extends JiraEntity {
   public void setStatusCategory(StatusCategory statusCategory) {
     this.statusCategory = statusCategory;
   }
-
 }

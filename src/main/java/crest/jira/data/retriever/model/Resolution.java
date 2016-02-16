@@ -2,6 +2,9 @@ package crest.jira.data.retriever.model;
 
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * An issue can be resolved in many ways, only one of them being 'Fixed'. A
  * resolution is usually set when the status is changed.
@@ -23,4 +26,31 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Resolution")
 public class Resolution extends JiraEntity {
 
+  public static final String NOT_A_PROBLEM = "8";
+  public static final String INVALID = "6";
+  public static final String WONT_FIX = "2";
+  public static final String INCOMPLETE = "4";
+  public static final String CANNOT_REPRODUCE = "5";
+  public static final String UNRESOLVED = "9";
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(this.getId()).toHashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj == this) {
+      return true;
+    }
+    if (obj.getClass() != getClass()) {
+      return false;
+    }
+
+    JiraEntity rhs = (JiraEntity) obj;
+    return new EqualsBuilder().append(this.getId(), rhs.getId()).isEquals();
+  }
 }
