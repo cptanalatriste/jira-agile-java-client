@@ -4,6 +4,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * An issue can be resolved in many ways, only one of them being 'Fixed'. A
@@ -32,6 +33,12 @@ public class Resolution extends JiraEntity {
   public static final String INCOMPLETE = "4";
   public static final String CANNOT_REPRODUCE = "5";
   public static final String UNRESOLVED = "9";
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this).append("name", this.getName()).append("id", this.getId())
+        .toString();
+  }
 
   @Override
   public int hashCode() {
