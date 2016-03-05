@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * <li>Trivial — Lowest priority.
  * 
  * @see <a href=
- *      "https://confluence.atlassian.com/jira/what-is-an-issue-270829373.html">
+ *      "https://confluence.atlassian.com/jira063/what-is-an-issue-683542485.html">
  *      What is an Issue, from JIRA User's Guide </a>
  * 
  * @author Carlos G. Gavidia

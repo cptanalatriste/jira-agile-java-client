@@ -31,6 +31,9 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "Status")
 public class Status extends JiraEntity {
 
+  public static final String OPEN = "1";
+  public static final String REOPEN = "4";
+
   @DatabaseField
   private String iconUrl;
   @DatabaseField(foreign = true, columnName = "statusCategoryId")
