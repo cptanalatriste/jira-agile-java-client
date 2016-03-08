@@ -22,8 +22,6 @@ public abstract class BaseRetriever {
    *          Client instance.
    * @param configuration
    *          Configuration instance.
-   * @param fields
-   *          Field information.
    */
   public BaseRetriever(Client client, JiraApiConfiguration configuration) {
     this.client = client;
